@@ -16,6 +16,11 @@
     color: white;
 }
 
+.button:active {
+    background-color: white;
+    color: black;
+}
+
 .Message {
     background-color: aqua;
     padding: .5em;
