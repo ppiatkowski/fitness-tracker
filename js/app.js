@@ -1,6 +1,26 @@
 
 "use strict";
 
+// TODO feature - volume calculator
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const datapoints = [new DataPoint(new Date(2018, 9, 1), 73.2), 
+                        new DataPoint(new Date(2018, 9, 15), 72.6),
+                        new DataPoint(new Date(2018, 10, 10), 71.2),
+                        new DataPoint(new Date(2018, 11, 12), 71.3),
+                        new DataPoint(new Date(2018, 11, 30), 71.1)];
+    const dataset = new Dataset(datapoints)
+    dataset.addDataPoint(new DataPoint(new Date(2018, 12, 5), 69.9));
+    dataset.addDataPoint(new DataPoint(new Date(2019, 1, 5), 70.5));
+
+    const flags = [new Flag("deload", new Date(2018, 10, 10), 'rgba(255, 0, 0, 0.8)')]
+    const targets = [new Target("plan minimum", 70.0), new Target("ideał", 68.0, 'rgba(0, 255, 0, 0.8')]
+
+    drawChart(dataset.getDataArray(), flags, targets)
+});
+
+
 class DataPoint {
     constructor(date, value) {
         this.date = date;
@@ -23,6 +43,7 @@ class Dataset {
         })
     }
 }
+
 class Flag {
     constructor(title, date, color = 'rgba(0,0,255,0.8)') {
         this.title = title
@@ -31,38 +52,31 @@ class Flag {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function(){
-
-    const datapoints = [new DataPoint(new Date(2018, 9, 1), 73.2), 
-                        new DataPoint(new Date(2018, 9, 15), 72.6),
-                        new DataPoint(new Date(2018, 10, 10), 71.2),
-                        new DataPoint(new Date(2018, 11, 12), 71.3),
-                        new DataPoint(new Date(2018, 11, 30), 71.1)];
-    const dataset = new Dataset(datapoints)
-    dataset.addDataPoint(new DataPoint(new Date(2018, 12, 5), 69.9));
-    dataset.addDataPoint(new DataPoint(new Date(2019, 1, 5), 70.5));
-
-    const flags = [new Flag("deload", new Date(2018, 10, 10), 'rgba(255, 0, 0, 0.8)')]
-    const targets = []
-
-    drawChart(dataset.getDataArray(), flags, targets)
-  });
-
-function drawChart(data, flags, targets) { 
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var config = createChartConfig(data)
-    config = addFlags(config, flags)
-    var chart = new Chart(ctx, config)
+class Target {
+    constructor(title, value, color = 'rgba(0,0,0,0.8)') {
+        this.title = title
+        this.value = value
+        this.color = color
+    }
 }
 
-function createChartConfig(data) {
-    const config = {
-        type: 'line',
-        data: {
+class ChartModel {
+    constructor(dataset, flags, targets) {
+        this.dataset = dataset
+        this.flags = flags
+        this.targets = targets
+    }
+}
+
+class ChartConfig {
+    constructor(model) {
+        this.model = model
+        this.type = 'line';
+        this.data = {
             datasets: [{
                 lineTension: 0.0,
                 label: 'weight',
-                data: data,
+                data: this.model.dataset,
                 backgroundColor: [
                     'rgba(0, 99, 132, 0.2)'
                 ],
@@ -72,8 +86,8 @@ function createChartConfig(data) {
                 pointBackgroundColor: 'rgba(0, 99, 132, 1)',
                 borderWidth: 2
             }]
-        },
-        options: {
+        };
+        this.options = {
             ticks: {
                 source: "data"
             },
@@ -86,7 +100,7 @@ function createChartConfig(data) {
                 }],
                 yAxes: [{
                     ticks: {
-                        suggestedMin: 69.5,
+                        suggestedMin: 65.5,
                     }
                 }]
             },
@@ -94,67 +108,84 @@ function createChartConfig(data) {
                 drawTime: 'afterDatasetsDraw', 
                 events: ['click'],
                 dblClickSpeed: 350, // ms (default)
-                annotations: [{
-                    drawTime: 'afterDraw', // overrides annotation.drawTime if set
-                    id: 'annotation-target', // optional
-                    type: 'line',
-                    mode: 'horizontal',
-                    scaleID: 'y-axis-0',
-                    value: 70.0,
-                    borderColor: 'black',
-                    borderWidth: 1,
-                    label: {
-                        backgroundColor: 'rgba(0,0,0,0.8)',
-                        fontSize: 12,
-                        fontColor: "#fff",
-                        position: "left",
-                        enabled: true,
-                        content: "Target"
-                    },
-                    events: ['click'],
-        
-                    // Fires when the user clicks this annotation on the chart
-                    // (be sure to enable the event in the events array below).
-                    onClick: function(e) {
-                        console.log("annotation clicked "+e)
-                        // `this` is bound to the annotation element
-                    }
-                }]
+                annotations: []
             }
-        }
+        };
+
+        this.addFlags(this.model.flags)
+        this.addTargets(this.model.targets)
     }
-    return config;
+
+    addFlags(flags) {
+        flags.forEach(flag => {
+            const flagConfig = {
+                drawTime: 'afterDraw', // overrides annotation.drawTime if set
+                type: 'line',
+                mode: 'vertical',
+                scaleID: 'x-axis-0',
+                value: flag.date,
+                borderColor: flag.color,
+                borderWidth: 1,
+                label: {
+                    backgroundColor: flag.color,
+                    fontSize: 12,
+                    fontColor: "#fff",
+                    position: "top",
+                    enabled: true,
+                    content: flag.title
+                },
+                events: ['click'],
+    
+                // Fires when the user clicks this annotation on the chart
+                // (be sure to enable the event in the events array below).
+                onClick: function(e) {
+                    console.log("annotation clicked "+e)
+                    // `this` is bound to the annotation element
+                }
+            }
+            this.options.annotation.annotations.push(flagConfig)
+        });
+    }
+
+    addTargets(targets) {
+        targets.forEach(target => {
+            const targetConfig = {
+                drawTime: 'afterDraw', // overrides annotation.drawTime if set
+                type: 'line',
+                mode: 'horizontal',
+                scaleID: 'y-axis-0',
+                value: target.value,
+                borderColor: target.color,
+                borderWidth: 1,
+                label: {
+                    backgroundColor: target.color,
+                    fontSize: 12,
+                    fontColor: "#fff",
+                    position: "left",
+                    enabled: true,
+                    content: target.title
+                },
+                events: ['click'],
+    
+                // Fires when the user clicks this annotation on the chart
+                // (be sure to enable the event in the events array below).
+                onClick: function(e) {
+                    console.log("annotation clicked "+e)
+                    // `this` is bound to the annotation element
+                }
+            }
+            this.options.annotation.annotations.push(targetConfig)
+        });
+    }
+
+    updateChartArea() {
+
+    }
 }
 
-function addFlags(config, flags) {
-    flags.forEach(flag => {
-        const flagConfig = {
-            drawTime: 'afterDraw', // overrides annotation.drawTime if set
-            type: 'line',
-            mode: 'vertical',
-            scaleID: 'x-axis-0',
-            value: flag.date,
-            borderColor: flag.color,
-            borderWidth: 1,
-            label: {
-                backgroundColor: flag.color,
-                fontSize: 12,
-                fontColor: "#fff",
-                position: "top",
-                enabled: true,
-                content: flag.title
-            },
-            events: ['click'],
-
-            // Fires when the user clicks this annotation on the chart
-            // (be sure to enable the event in the events array below).
-            onClick: function(e) {
-                console.log("annotation clicked "+e)
-                // `this` is bound to the annotation element
-            }
-        }
-        config.options.annotation.annotations.push(flagConfig)
-    });
-
-    return config;
+function drawChart(data, flags, targets) { 
+    var ctx = document.getElementById("myChart").getContext('2d');
+    const chartModel = new ChartModel(data, flags, targets)
+    const config = new ChartConfig(chartModel)
+    var chart = new Chart(ctx, config)
 }
