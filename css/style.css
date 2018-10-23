@@ -1,0 +1,40 @@
+
+.button {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 5px;
+    background-color: white;
+    display: inline-block;
+}
+
+#chart {
+    width: 30em;
+}
+
+.button:hover {
+    background-color: black;
+    color: white;
+}
+
+.Message {
+    background-color: aqua;
+    padding: .5em;
+    margin-top: .5em;
+    /* margin-bottom: .5em; */
+    border-radius: 5pt 5pt 0pt 0pt;
+    border-width: 1px 1px 0px 1px;
+    border-style: solid;
+    border-color: blue;
+}
+.Message:hover {
+    background-color: blue;
+}
+.Status {
+    background-color: aquamarine;
+    text-align: right;
+    border: solid blue;
+    border-width: 0pt 1pt 1pt 1pt;
+    border-radius: 0pt 0pt 5pt 5pt;
+    padding: 2px 5px;
+    font-size: 0.75em;
+}
