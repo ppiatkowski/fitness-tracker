@@ -1,22 +1,61 @@
 
+"use strict";
+
+class DataPoint {
+    constructor(date, value) {
+        this.date = date;
+        this.value = value
+    }
+}
+
+class Dataset {
+    constructor(datapoints) {
+        this.datapoints = datapoints;
+    }
+
+    addDataPoint(datapoint) {
+        this.datapoints.push(datapoint)
+    }
+
+    getDataArray() {
+        return this.datapoints.map(function (datapoint) {
+            return {x: datapoint.date, y: datapoint.value}
+        })
+    }
+}
+class Flag {
+    constructor() {
+    }
+
+
+}
+
 document.addEventListener("DOMContentLoaded", function(){
-    drawChart()
+
+    const datapoints = [new DataPoint(new Date(2018, 9, 1), 73.2), 
+                        new DataPoint(new Date(2018, 9, 15), 72.6),
+                        new DataPoint(new Date(2018, 10, 10), 71.2),
+                        new DataPoint(new Date(2018, 11, 12), 71.3),
+                        new DataPoint(new Date(2018, 11, 30), 71.1)];
+    const dataset = new Dataset(datapoints)
+    dataset.addDataPoint(new DataPoint(new Date(2018, 12, 5), 69.9));
+    dataset.addDataPoint(new DataPoint(new Date(2019, 1, 5), 69.9));
+
+    const flags = []
+    const targets = []
+
+    drawChart(dataset.getDataArray(), flags, targets)
   });
 
-function drawChart() { 
+function drawChart(data, flags, targets) { 
     var ctx = document.getElementById("myChart").getContext('2d');
-
     var chart = new Chart(ctx, {
         type: 'line',
         data: {
             datasets: [{
-                label: 'weight in kg',
-                data: [{x: new Date(2018, 9, 1), y: 73.2}, 
-                        {x: new Date(2018, 9, 15), y: 72.6}, 
-                        {x: new Date(2018, 10, 10), y: 71.2}, 
-                        {x: new Date(2018, 10, 20), y: 71.8}, 
-                        {x: new Date(2018, 11, 12), y: 72.6}, 
-                        {x: new Date(2018, 11, 30), y: 71.1}],
+                lineTension: 0.0,
+                label: 'weight',
+                data: data,
                 backgroundColor: [
                     'rgba(0, 99, 132, 0.2)'
                 ],
