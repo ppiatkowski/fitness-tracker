@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const flags = [new Flag("deload", new Date(2018, 10, 10), 'rgba(255, 0, 0, 0.8)')]
     const targets = [new Target("plan minimum", 70.0), new Target("ideał", 68.0, 'rgba(0, 255, 0, 0.8')]
 
-    drawChart(dataset.getDataArray(), flags, targets)
+    drawChart(dataset, flags, targets)
 });
 
 
@@ -76,7 +76,7 @@ class ChartConfig {
             datasets: [{
                 lineTension: 0.0,
                 label: 'weight',
-                data: this.model.dataset,
+                data: this.model.dataset.getDataArray(),
                 backgroundColor: [
                     'rgba(0, 99, 132, 0.2)'
                 ],
@@ -114,6 +114,7 @@ class ChartConfig {
 
         this.addFlags(this.model.flags)
         this.addTargets(this.model.targets)
+        this.updateChartArea()
     }
 
     addFlags(flags) {
@@ -179,13 +180,29 @@ class ChartConfig {
     }
 
     updateChartArea() {
+        var minY = 0
+        var maxY = Infinity
 
+        const datapointValues = this.model.dataset.datapoints.map(function(datapoint) {
+            return datapoint.value;
+        })
+        minY = Math.min(...datapointValues)
+        maxY = Math.max(...datapointValues)
+
+        const targetValues = this.model.targets.map(function(target) {
+            return target.value;
+        })
+        minY = Math.min(minY, ...targetValues)
+        maxY = Math.max(minY, ...targetValues)
+
+        this.options.scales.yAxes[0].ticks.suggestedMin = minY - 1;
+        this.options.scales.yAxes[0].ticks.suggestedMax = maxY + 1;
     }
 }
 
-function drawChart(data, flags, targets) { 
+function drawChart(dataset, flags, targets) { 
     var ctx = document.getElementById("myChart").getContext('2d');
-    const chartModel = new ChartModel(data, flags, targets)
+    const chartModel = new ChartModel(dataset, flags, targets)
     const config = new ChartConfig(chartModel)
     var chart = new Chart(ctx, config)
 }
