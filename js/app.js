@@ -24,10 +24,11 @@ class Dataset {
     }
 }
 class Flag {
-    constructor() {
+    constructor(title, date, color = 'rgba(0,0,255,0.8)') {
+        this.title = title
+        this.date = date
+        this.color = color
     }
-
-
 }
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -39,9 +40,9 @@ document.addEventListener("DOMContentLoaded", function(){
                         new DataPoint(new Date(2018, 11, 30), 71.1)];
     const dataset = new Dataset(datapoints)
     dataset.addDataPoint(new DataPoint(new Date(2018, 12, 5), 69.9));
-    dataset.addDataPoint(new DataPoint(new Date(2019, 1, 5), 69.9));
+    dataset.addDataPoint(new DataPoint(new Date(2019, 1, 5), 70.5));
 
-    const flags = []
+    const flags = [new Flag("deload", new Date(2018, 10, 10), 'rgba(255, 0, 0, 0.8)')]
     const targets = []
 
     drawChart(dataset.getDataArray(), flags, targets)
@@ -49,7 +50,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function drawChart(data, flags, targets) { 
     var ctx = document.getElementById("myChart").getContext('2d');
-    var chart = new Chart(ctx, {
+    var config = createChartConfig(data)
+    config = addFlags(config, flags)
+    var chart = new Chart(ctx, config)
+}
+
+function createChartConfig(data) {
+    const config = {
         type: 'line',
         data: {
             datasets: [{
@@ -100,7 +107,7 @@ function drawChart(data, flags, targets) {
                         backgroundColor: 'rgba(0,0,0,0.8)',
                         fontSize: 12,
                         fontColor: "#fff",
-                        position: "right",
+                        position: "left",
                         enabled: true,
                         content: "Target"
                     },
@@ -112,37 +119,42 @@ function drawChart(data, flags, targets) {
                         console.log("annotation clicked "+e)
                         // `this` is bound to the annotation element
                     }
-                },
-                {
-                    drawTime: 'afterDraw', // overrides annotation.drawTime if set
-                    id: 'annotation-flag', // optional
-                    type: 'line',
-                    mode: 'vertical',
-                    scaleID: 'x-axis-0',
-                    value: new Date(2018,11, 13),
-                    borderColor: 'rgba(0,0,255,0.8)',
-                    borderWidth: 1,
-                    label: {
-                        backgroundColor: 'rgba(0,0,255,0.8)',
-                        fontSize: 12,
-                        fontColor: "#fff",
-                        position: "top",
-                        enabled: true,
-                        content: "Start IF"
-                    },
-                    events: ['click'],
-        
-                    // Fires when the user clicks this annotation on the chart
-                    // (be sure to enable the event in the events array below).
-                    onClick: function(e) {
-                        console.log("annotation clicked "+e)
-                        // `this` is bound to the annotation element
-                    }
-                }
-                ]
+                }]
             }
-
         }
-        
-    })
+    }
+    return config;
+}
+
+function addFlags(config, flags) {
+    flags.forEach(flag => {
+        const flagConfig = {
+            drawTime: 'afterDraw', // overrides annotation.drawTime if set
+            type: 'line',
+            mode: 'vertical',
+            scaleID: 'x-axis-0',
+            value: flag.date,
+            borderColor: flag.color,
+            borderWidth: 1,
+            label: {
+                backgroundColor: flag.color,
+                fontSize: 12,
+                fontColor: "#fff",
+                position: "top",
+                enabled: true,
+                content: flag.title
+            },
+            events: ['click'],
+
+            // Fires when the user clicks this annotation on the chart
+            // (be sure to enable the event in the events array below).
+            onClick: function(e) {
+                console.log("annotation clicked "+e)
+                // `this` is bound to the annotation element
+            }
+        }
+        config.options.annotation.annotations.push(flagConfig)
+    });
+
+    return config;
 }
