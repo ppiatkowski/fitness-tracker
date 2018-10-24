@@ -1,0 +1,27 @@
+{
+  "name": "fitness-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "chart.js": "^2.7.3",
+    "chartjs-plugin-annotation": "^0.5.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ppiatkowski/fitness-tracker.git"
+  },
+  "author": "Pawel Piatkowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ppiatkowski/fitness-tracker/issues"
+  },
+  "homepage": "https://github.com/ppiatkowski/fitness-tracker#readme"
+}

@@ -240,7 +240,7 @@ const datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2),
     new DataPoint(new Date(2018, 7, 30), 71.1)];
 const dataset = new Dataset(datapoints)
 
-const flags = [new Flag("deload", new Date(2018, 10, 10), 'rgba(255, 0, 0, 0.8)')];
+const flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
 const targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
 
 document.addEventListener("DOMContentLoaded", function(){
