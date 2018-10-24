@@ -3,7 +3,9 @@
 
 // TODO feature - volume calculator
 
+const chartAreaPadding = 1;
 var chart = null;
+
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
@@ -94,6 +96,7 @@ class ChartConfig {
             }]
         };
         this.options = {
+            animation: false,
             ticks: {
                 source: "data"
             },
@@ -106,7 +109,7 @@ class ChartConfig {
                 }],
                 yAxes: [{
                     ticks: {
-                        suggestedMin: 65.5,
+                        suggestedMin: 0,
                     }
                 }]
             },
@@ -201,8 +204,8 @@ class ChartConfig {
         minY = Math.min(minY, ...targetValues)
         maxY = Math.max(minY, ...targetValues)
 
-        this.options.scales.yAxes[0].ticks.suggestedMin = minY - 1;
-        this.options.scales.yAxes[0].ticks.suggestedMax = maxY + 1;
+        this.options.scales.yAxes[0].ticks.suggestedMin = minY - chartAreaPadding;
+        this.options.scales.yAxes[0].ticks.suggestedMax = maxY + chartAreaPadding;
     }
 }
 
