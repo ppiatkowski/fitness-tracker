@@ -3,6 +3,7 @@
 
 // TODO feature - volume calculator
 
+var chart = null;
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
@@ -209,7 +210,14 @@ function drawChart(dataset, flags, targets) {
     var ctx = document.getElementById("myChart").getContext('2d');
     const chartModel = new ChartModel(dataset, flags, targets)
     const config = new ChartConfig(chartModel)
-    window.chart = new Chart(ctx, config);
+
+    if (chart == null) {
+        chart = new Chart(ctx, config);
+    }
+    else {
+        chart.data.datasets[0].data = chartModel.dataset.getDataArray()
+        chart.update()
+    }
 }
 
 
