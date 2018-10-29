@@ -12,11 +12,11 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
-var currentDate = new Date(2018, 8, 5);
+var currentDate = new Date(2018, 6, 2);
 
 
 function addDataPoint() {
-    const delta = 0.4 - Math.random();
+    const delta = 0.45 - Math.random();
     const value = dataset.datapoints[dataset.datapoints.length - 1].value + delta;
     console.log("Adding data point("+currentDate+" value=", value);
     dataset.addDataPoint(new DataPoint(currentDate, value));
@@ -194,13 +194,15 @@ class ChartConfig {
 
         this.options.annotation.annotations = model.getAnnotationConfig()
         this.updateChartArea();
+        this.updateChartTimeUnits();
     }
 
     updateChartArea() {
         var minY = 0;
         var maxY = Infinity;
 
-        const datapointValues = this.model.dataset.datapoints.map(function(datapoint) {
+        const datapoints = this.model.dataset.datapoints;
+        const datapointValues = datapoints.map(function(datapoint) {
             return datapoint.value;
         })
         minY = Math.min(...datapointValues);
@@ -215,6 +217,19 @@ class ChartConfig {
         this.options.scales.yAxes[0].ticks.suggestedMin = minY - chartAreaPadding;
         this.options.scales.yAxes[0].ticks.suggestedMax = maxY + chartAreaPadding;
     }
+
+    updateChartTimeUnits() {
+        var unit = "day"
+        const datapoints = this.model.dataset.datapoints;
+        if (datapoints.length > 1) {
+            // datapoints are assumed to be always sorted because addDatapoint method sorts data points
+            const periodInDays = Math.floor((datapoints[datapoints.length - 1].date - datapoints[0].date)/(1000*60*60*24));
+            if (periodInDays > 60) {
+                unit = "month";
+            }
+        }
+        this.options.scales.xAxes[0].time.unit = unit
+    }
 }
 
 function drawChart(dataset, flags, targets) { 
@@ -227,17 +242,13 @@ function drawChart(dataset, flags, targets) {
     }
     else {
         chart.data.datasets[0].data = chartModel.dataset.getDataArray();
-        chart.options.annotation.annotations = chartModel.getAnnotationConfig()
+        chart.options = config.options;
         chart.update();
     }
 }
 
 
-const datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2), 
-    new DataPoint(new Date(2018, 6, 15), 72.6),
-    new DataPoint(new Date(2018, 7, 10), 71.2),
-    new DataPoint(new Date(2018, 7, 12), 71.3),
-    new DataPoint(new Date(2018, 7, 30), 71.1)];
+const datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2)]; 
 const dataset = new Dataset(datapoints)
 
 const flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
