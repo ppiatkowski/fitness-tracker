@@ -15,16 +15,6 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
-function logout() {
-    firebase.auth().signOut()
-        .then(function() {
-            console.log("Logged out");
-        })
-        .catch(function(error) {
-            console.log("Failed to logout");
-    });
-}
-
 function addDataPoint() {
     const delta = 0.45 - Math.random();
     const value = dataset.datapoints[dataset.datapoints.length - 1].value + delta;
@@ -56,47 +46,40 @@ function drawChart(dataset, flags, targets) {
     }
 }
 
-// Firebase
-function initApp() {
-    firebase.auth().onAuthStateChanged(user => {
-        console.log("AuthStateChanged user: "+ user)
-        if (user) {
-            // User is signed in.
-            var displayName = user.displayName;
-            var email = user.email;
-            var emailVerified = user.emailVerified;
-            var photoURL = user.photoURL;
-            var uid = user.uid;
-            var phoneNumber = user.phoneNumber;
-            var providerData = user.providerData;
-            user.getIdToken().then(function(accessToken) {
-                document.getElementById('login').style.display = "none";
-                document.getElementById('main').style.display = "block";
-                document.getElementById('sign-in-status').textContent = 'Signed in';
-                document.getElementById('account-details').textContent = JSON.stringify({
-                    displayName: displayName,
-                    email: email,
-                    emailVerified: emailVerified,
-                    phoneNumber: phoneNumber,
-                    photoURL: photoURL,
-                    uid: uid,
-                    accessToken: accessToken,
-                    providerData: providerData
-                }, null, '  ');
-            });
-        } else {
-            // User is signed out.
-            document.getElementById('login').style.display = "block";
-            document.getElementById('main').style.display = "none";
-            document.getElementById('sign-in-status').textContent = 'Signed out';
-            document.getElementById('account-details').textContent = 'null';
-        }
-    }, function(error) {
-        console.log(error);
-    });
-};
-
 function main() {
+    document.getElementById('main').style.display = "none";
+
+    const loginSection = document.getElementById('loginSection');
+    const userLabel = document.getElementById('user');
+    const logoutSection = document.getElementById('logoutSection');
+    const txtEmail = document.getElementById('txtEmail');
+    const txtPassword = document.getElementById('txtPassword');
+    const txtLogin = document.getElementById('btnLogin');
+    const txtSignUp = document.getElementById('btnSignUp');
+    const txtLogout = document.getElementById('btnLogout');
+
+    btnLogin.addEventListener('click', e => {
+        // get email and pass
+        const email = txtEmail.value;
+        const pass = txtPassword.value;
+        const auth = firebase.auth();
+        const promise = auth.signInWithEmailAndPassword(email, pass);
+        promise.catch(e => console.log(e.message));
+    });
+
+    btnSignUp.addEventListener('click', e => {
+        // get email and pass
+        const email = txtEmail.value;
+        const pass = txtPassword.value;
+        const auth = firebase.auth();
+        const promise = auth.createUserWithEmailAndPassword(email, pass);
+        promise.catch(e => console.log(e.message));
+    });
+
+    btnLogout.addEventListener('click', e => {
+        firebase.auth().signOut();
+    });
+
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyDlR8LNgMLbu2rWfAefC1tiQHHL0JSXOs0",
@@ -106,48 +89,38 @@ function main() {
         storageBucket: "fitness-tracker-35452.appspot.com",
         messagingSenderId: "1084297687849"
     };
-
-    document.getElementById('login').style.display = "none";
-    document.getElementById('main').style.display = "none";
     firebase.initializeApp(config);
-    // Initialize the FirebaseUI Widget using Firebase.
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
-
-    var uiConfig = {
-        callbacks: {
-            signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-                console.log("Used signed in successfully")
-                // User successfully signed in.
-                // Return type determines whether we continue the redirect automatically
-                // or whether we leave that to developer to handle.
-                return false;
-            },
-            uiShown: function() {
-                // The widget is rendered.
-                // Hide the loader.
-                document.getElementById('loader').style.display = 'none';
-            }
-        },
-        signInFlow: 'redirect',
-        signInSuccessUrl: '<url-to-redirect-to-on-success>',
-        signInOptions: [
-            // Leave the lines as is for the providers you want to offer your users.
-            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-            firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ],
-        // Terms of service url.
-        tosUrl: '<your-tos-url>',
-        // Privacy policy url.
-        privacyPolicyUrl: '<your-privacy-policy-url>'
-    };
-
-    // The start method will wait until the DOM is loaded.
-    ui.start('#firebaseui-auth-container', uiConfig);
 
     document.addEventListener("DOMContentLoaded", function(){
         drawChart(dataset, flags, targets);
 
-        initApp();
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("AuthStateChanged user: "+ user)
+            if (user) {
+                // User is signed in.
+                loginSection.classList.add('hide');
+                logoutSection.classList.remove('hide');
+                // debugger;
+                userLabel.innerHTML = "Logged in as "+ (user.displayName ? user.displayName : user.email);
+                var displayName = user.displayName;
+                var email = user.email;
+                var emailVerified = user.emailVerified;
+                var photoURL = user.photoURL;
+                var uid = user.uid;
+                var phoneNumber = user.phoneNumber;
+                var providerData = user.providerData;
+                user.getIdToken().then(function(accessToken) {
+                    document.getElementById('main').style.display = "block";
+                });
+            } else {
+                // User is signed out.
+                loginSection.classList.remove('hide');
+                logoutSection.classList.add('hide');
+                document.getElementById('main').style.display = "none";
+            }
+        }, function(error) {
+            console.log(error);
+        });
     });
 }
 
