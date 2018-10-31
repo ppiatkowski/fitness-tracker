@@ -5,24 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fitness Tracker</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
 </head>
 <body>
+    <!-- TODO loading indicator during login -->
     <header class="navbar">
         <div id="loginSection">
             <input id="txtEmail" type="email" placeholder="e-mail">
             <input id="txtPassword" type="password" placeholder="password">
-            <button id="btnLogin" class="btn btn-action">Log in</button>
-            <button id="btnSignUp" class="btn btn-secondary">Sign Up</button>
+            <button id="btnLogin" class="button btn-action">Log in</button>
+            <button id="btnSignUp" class="button btn-secondary">Sign Up</button>
         </div>
         <div id="logoutSection" class="hide">
             <span id="user">Logged in as</span>
-            <button id="btnLogout" class="btn btn-action">Log out</button>
+            <button id="btnLogout" class="button btn-action">Log out</button>
         </div>
     </header>
 
-    <div id="main">
+    <div id="main" class="hide">
         <div id="chart">
             <canvas id="myChart" width="200" height="150"></canvas>
         </div>
@@ -31,10 +33,7 @@
             <div id="button2" class="button" onclick="addFlag()"> Add Flag</div>
             <div id="button3" class="button" onclick="addDataPoint()"> + </div>
         </div>
-        <div id="output">nothing</div>
-
-        <header>Hello</header>
-        <nav>test</nav>
+    
         <div class="Message">
             bla
         </div>
