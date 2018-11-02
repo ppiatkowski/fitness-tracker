@@ -2,12 +2,14 @@
 
 // TODO feature - volume calculator
 
-const datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2)]; 
-const dataset = new Dataset(datapoints)
-const flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
-const targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
+var datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2)]; 
+var dataset = new Dataset(datapoints);
+var flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
+var targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
 
 var currentDate = new Date(2018, 6, 2);
+
+var currentUser = null;
 
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
@@ -15,11 +17,38 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
+function resetData() {
+    datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2)]; 
+    dataset = new Dataset(datapoints);
+    flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
+    targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
+    currentDate = new Date(2018, 6, 2);
+    currentUser = null; 
+}
+
 function addDataPoint() {
     const delta = 0.45 - Math.random();
     const value = dataset.datapoints[dataset.datapoints.length - 1].value + delta;
     console.log("Adding data point("+currentDate+" value=", value);
     dataset.addDataPoint(new DataPoint(currentDate, value));
+
+    
+    if (currentUser) {
+        var chartsRef = firebase.firestore().collection("charts");
+        chartsRef.doc(currentUser.uid).set({
+            "username": "Pawel",
+            "charts": [
+                {
+                    title: "weight",
+                    dataset: JSON.parse( JSON.stringify(dataset) )
+                },
+                {
+                    title: "chest press 1 rep max"
+                }
+            ]
+        });
+    }
+
     currentDate = currentDate.addDays(2);
     drawChart(dataset, flags, targets);
 }
@@ -59,16 +88,14 @@ function main() {
     const txtLogout = document.getElementById('btnLogout');
 
     btnLogin.addEventListener('click', e => {
-        // get email and pass
         const email = txtEmail.value;
         const pass = txtPassword.value;
         const auth = firebase.auth();
         const promise = auth.signInWithEmailAndPassword(email, pass);
-        promise.catch(e => console.log(e.message));
+        promise.catch(e => console.log("Login error caught: " + e.message));
     });
 
     btnSignUp.addEventListener('click', e => {
-        // get email and pass
         const email = txtEmail.value;
         const pass = txtPassword.value;
         const auth = firebase.auth();
@@ -78,6 +105,7 @@ function main() {
 
     btnLogout.addEventListener('click', e => {
         firebase.auth().signOut();
+        resetData();
     });
 
     // Initialize Firebase
@@ -97,10 +125,10 @@ function main() {
         firebase.auth().onAuthStateChanged(user => {
             console.log("AuthStateChanged user: "+ user)
             if (user) {
+                currentUser = user;
                 // User is signed in.
                 loginSection.classList.add('hide');
                 logoutSection.classList.remove('hide');
-                // debugger;
                 userLabel.innerHTML = "Logged in as "+ (user.displayName ? user.displayName : user.email);
                 var displayName = user.displayName;
                 var email = user.email;
@@ -109,6 +137,23 @@ function main() {
                 var uid = user.uid;
                 var phoneNumber = user.phoneNumber;
                 var providerData = user.providerData;
+
+                console.log("UID: "+ uid);
+
+                // get only my charts
+                firebase.firestore().collection("charts").doc(uid).get().then(function(doc) {
+                        // doc.data() is never undefined for query doc snapshots
+                        console.log(doc.id, " => ", doc.data());
+                        const chartData = doc.data();
+                        document.getElementById('chart-title').innerHTML = chartData.charts[0].title;
+
+                        var receivedDataset = new Dataset([]);
+                        if (chartData.charts[0].dataset && chartData.charts[0].dataset.datapoints) {
+                            receivedDataset = new Dataset(chartData.charts[0].dataset.datapoints);
+                        }
+                        drawChart(receivedDataset, flags, targets);
+                });
+
                 user.getIdToken().then(function(accessToken) {
                     document.getElementById('main').style.display = "block";
                 });
