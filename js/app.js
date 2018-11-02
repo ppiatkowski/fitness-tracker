@@ -7,8 +7,6 @@ var dataset = new Dataset(datapoints);
 var flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
 var targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
 
-var currentDate = new Date(2018, 6, 2);
-
 var currentUser = null;
 
 Date.prototype.addDays = function(days) {
@@ -22,16 +20,17 @@ function resetData() {
     dataset = new Dataset(datapoints);
     flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
     targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
-    currentDate = new Date(2018, 6, 2);
     currentUser = null; 
 }
 
 function addDataPoint() {
     const delta = 0.45 - Math.random();
-    const value = dataset.datapoints[dataset.datapoints.length - 1].value + delta;
-    console.log("Adding data point("+currentDate+" value=", value);
-    dataset.addDataPoint(new DataPoint(currentDate, value));
-
+    const lastDataPoint = dataset.datapoints[dataset.datapoints.length - 1];
+    const newDate = lastDataPoint.date.addDays(2);
+    const value = lastDataPoint.value + delta;
+     
+    console.log("Adding data point("+newDate+" value=", value);
+    dataset.addDataPoint(new DataPoint(newDate, value));
     
     if (currentUser) {
         var chartsRef = firebase.firestore().collection("charts");
@@ -49,7 +48,6 @@ function addDataPoint() {
         });
     }
 
-    currentDate = currentDate.addDays(2);
     drawChart(dataset, flags, targets);
 }
 
@@ -147,11 +145,15 @@ function main() {
                         const chartData = doc.data();
                         document.getElementById('chart-title').innerHTML = chartData.charts[0].title;
 
-                        var receivedDataset = new Dataset([]);
                         if (chartData.charts[0].dataset && chartData.charts[0].dataset.datapoints) {
-                            receivedDataset = new Dataset(chartData.charts[0].dataset.datapoints);
+                            const receivedDatapoints = chartData.charts[0].dataset.datapoints;
+                            const fixedDataPoints = receivedDatapoints.map(function(datapoint) {
+                                return {date: new Date(datapoint.date), value: datapoint.value};
+                            });
+
+                            dataset = new Dataset(fixedDataPoints);
                         }
-                        drawChart(receivedDataset, flags, targets);
+                        drawChart(dataset, flags, targets);
                 });
 
                 user.getIdToken().then(function(accessToken) {
