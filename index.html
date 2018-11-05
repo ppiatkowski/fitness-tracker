@@ -25,22 +25,25 @@
     </header>
 
     <div id="main" class="hide">
-        <div id="chart-title">Chart title</div>
-        <div id="chart">
-            <canvas id="myChart" width="200" height="150"></canvas>
+        <div class="mainContainer">
+            <button id="btnNewChart" class="button"> New Chart</button>
+            <div id="chart-title">Chart title</div>
+            <div id="chart">
+                <canvas id="myChart" width="200" height="150"></canvas>
+            </div>
+            <div id="buttons">
+                <div id="button1" class="button" onclick="alert('bla')"> Click Me 1</div>
+                <div id="button2" class="button" onclick="addFlag()"> Add Flag</div>
+                <div id="button3" class="button" onclick="addDataPoint()"> + </div>
+            </div>
+        
+            <div class="Message">
+                bla
+            </div>
+            <div class="Status">sent</div>
+            <div class="Message">blab bla</div>
+            <div class="Status">received</div>
         </div>
-        <div id="buttons">
-            <div id="button1" class="button" onclick="alert('bla')"> Click Me 1</div>
-            <div id="button2" class="button" onclick="addFlag()"> Add Flag</div>
-            <div id="button3" class="button" onclick="addDataPoint()"> + </div>
-        </div>
-    
-        <div class="Message">
-            bla
-        </div>
-        <div class="Status">sent</div>
-        <div class="Message">blab bla</div>
-        <div class="Status">received</div>
     </div>
 
     <script src='node_modules/moment/moment.js'></script>

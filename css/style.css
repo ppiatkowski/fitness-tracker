@@ -1,9 +1,23 @@
 body {
     font-family: 'Roboto'; font-size: 18px;
+    margin: 0;
+}
+
+.mainContainer {
+    max-width: 70%;
+    margin: auto;
+}
+
+#btnNewChart {
+    margin: auto;
 }
 
 #chart {
     width: 30em;
+}
+
+#user {
+    color: rgb(29, 91, 206);
 }
 
 .button {
@@ -51,10 +65,15 @@ body {
 }
 
 .navbar {
-    padding: .5em;
+    padding: 5pt;
+    margin: 0pt 0pt 15pt 0pt;
+    border-width: 0pt 0pt 1pt 0pt;
+    border-style: solid;
+    border-color: rgba(77, 130, 229, 1.0);
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    background-color: rgba(77, 130, 229, 0.25);
 }
 
 .hide {
