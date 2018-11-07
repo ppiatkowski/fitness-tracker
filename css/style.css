@@ -1,11 +1,21 @@
+:root {
+    --dominant-color: black;
+    --main-accent-color: rgba(77, 130, 229, 1.0);
+    --secondary-accent-color: rgba(77, 130, 229, 0.25);
+    --contrast-accent-color: black;
+}
+
 body {
     font-family: 'Roboto'; font-size: 18px;
     margin: 0;
+    background-color: var(--dominant-color);
 }
 
 .mainContainer {
     max-width: 70%;
+    min-width: 30em;
     margin: auto;
+    background-color: var(--dominant-color);
 }
 
 #btnNewChart {
@@ -14,54 +24,32 @@ body {
 
 #chart {
     width: 30em;
+    margin: auto;
 }
 
 #user {
-    color: rgb(29, 91, 206);
+    color: var(--main-accent-color);
 }
 
 .button {
-    border: 1px solid rgba(77, 130, 229, 1.0);
+    border: 1px solid var(--main-accent-color);
     border-radius: 3px;
     padding: 8px 30px;
     margin: 3px;
-    background-color: rgba(77, 130, 229, 1.0);
+    background-color: var(--main-accent-color);
     display: inline-block;
-    color: white;
+    color: var(--contrast-accent-color);
     font-weight: bold;
 }
 
 .button:hover {
-    background-color: white;
-    color: rgba(77, 130, 229, 1.0);
+    background-color: var(--contrast-accent-color);
+    color: var(--main-accent-color);
 }
 
 .button:active {
-    background-color: rgba(77, 130, 229, 1.0);
-    color: white;
-}
-
-.Message {
-    background-color: aqua;
-    padding: .5em;
-    margin-top: .5em;
-    /* margin-bottom: .5em; */
-    border-radius: 5pt 5pt 0pt 0pt;
-    border-width: 1px 1px 0px 1px;
-    border-style: solid;
-    border-color: blue;
-}
-.Message:hover {
-    background-color: blue;
-}
-.Status {
-    background-color: aquamarine;
-    text-align: right;
-    border: solid blue;
-    border-width: 0pt 1pt 1pt 1pt;
-    border-radius: 0pt 0pt 5pt 5pt;
-    padding: 2px 5px;
-    font-size: 0.75em;
+    background-color: var(--main-accent-color);
+    color: var(--contrast-accent-color);
 }
 
 .navbar {
@@ -69,11 +57,11 @@ body {
     margin: 0pt 0pt 15pt 0pt;
     border-width: 0pt 0pt 1pt 0pt;
     border-style: solid;
-    border-color: rgba(77, 130, 229, 1.0);
+    border-color: var(--main-accent-color);
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    background-color: rgba(77, 130, 229, 0.25);
+    background-color: var(--secondary-accent-color);
 }
 
 .hide {

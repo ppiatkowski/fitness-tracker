@@ -73,7 +73,24 @@ function drawChart(dataset, flags, targets) {
     }
 }
 
+function setColorMode()
+{
+    // dark mode
+    document.documentElement.style.setProperty("--dominant-color", "black");
+    document.documentElement.style.setProperty("--main-accent-color", "rgba(77, 130, 229, 1.0)");
+    document.documentElement.style.setProperty("--secondary-accent-color", "rgba(77, 130, 229, 0.25)");
+    document.documentElement.style.setProperty("--contrast-accent-color", "black");
+
+    // light mode
+    document.documentElement.style.setProperty("--dominant-color", "white");
+    document.documentElement.style.setProperty("--main-accent-color", "rgba(77, 130, 229, 1.0)");
+    document.documentElement.style.setProperty("--secondary-accent-color", "rgba(77, 130, 229, 0.25)");
+    document.documentElement.style.setProperty("--contrast-accent-color", "white");
+}
+
 function main() {
+    setColorMode();
+    
     document.getElementById("main").style.display = "none";
 
     const loginSection = document.getElementById("loginSection");
