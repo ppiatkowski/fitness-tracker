@@ -4,8 +4,8 @@
 
 var datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2)]; 
 var dataset = new Dataset(datapoints);
-var flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
-var targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
+var flags = [new Flag("deload", new Date(2018, 7, 1), "rgba(255, 0, 0, 0.8)")];
+var targets = [new Target("next target", 70.0, "rgba(0, 150, 0, 0.8)"), new Target("ideal", 68.0, "rgba(0, 100, 0, 0.8)")];
 
 var currentUser = null;
 
@@ -13,13 +13,13 @@ Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
-}
+};
 
 function resetData() {
     datapoints = [new DataPoint(new Date(2018, 6, 1), 73.2)]; 
     dataset = new Dataset(datapoints);
-    flags = [new Flag("deload", new Date(2018, 7, 1), 'rgba(255, 0, 0, 0.8)')];
-    targets = [new Target("next target", 70.0, 'rgba(0, 150, 0, 0.8)'), new Target("ideal", 68.0, 'rgba(0, 100, 0, 0.8')];
+    flags = [new Flag("deload", new Date(2018, 7, 1), "rgba(255, 0, 0, 0.8)")];
+    targets = [new Target("next target", 70.0, "rgba(0, 150, 0, 0.8)"), new Target("ideal", 68.0, "rgba(0, 100, 0, 0.8)")];
     currentUser = null; 
 }
 
@@ -29,7 +29,7 @@ function addDataPoint() {
     const newDate = lastDataPoint.date.addDays(2);
     const value = lastDataPoint.value + delta;
      
-    console.log("Adding data point("+newDate+" value=", value);
+    console.log("Adding data point(" + newDate + " value=" + value);
     dataset.addDataPoint(new DataPoint(newDate, value));
     
     if (currentUser) {
@@ -54,12 +54,12 @@ function addDataPoint() {
 function addFlag() {
     console.log("Adding flag at "+currentDate);
 
-    flags.push(new Flag("Flag", currentDate, 'rgba(255, 0, 0, 0.8)'));
+    flags.push(new Flag("Flag", currentDate, "rgba(255, 0, 0, 0.8)"));
     drawChart(dataset, flags, targets);
 }
 
 function drawChart(dataset, flags, targets) { 
-    var ctx = document.getElementById("myChart").getContext('2d');
+    var ctx = document.getElementById("myChart").getContext("2d");
     const chartModel = new ChartModel(dataset, flags, targets);
     const config = new ChartConfig(chartModel);
 
@@ -74,18 +74,18 @@ function drawChart(dataset, flags, targets) {
 }
 
 function main() {
-    document.getElementById('main').style.display = "none";
+    document.getElementById("main").style.display = "none";
 
-    const loginSection = document.getElementById('loginSection');
-    const userLabel = document.getElementById('user');
-    const logoutSection = document.getElementById('logoutSection');
-    const txtEmail = document.getElementById('txtEmail');
-    const txtPassword = document.getElementById('txtPassword');
-    const txtLogin = document.getElementById('btnLogin');
-    const txtSignUp = document.getElementById('btnSignUp');
-    const txtLogout = document.getElementById('btnLogout');
+    const loginSection = document.getElementById("loginSection");
+    const userLabel = document.getElementById("user");
+    const logoutSection = document.getElementById("logoutSection");
+    const txtEmail = document.getElementById("txtEmail");
+    const txtPassword = document.getElementById("txtPassword");
+    const txtLogin = document.getElementById("btnLogin");
+    const txtSignUp = document.getElementById("btnSignUp");
+    const txtLogout = document.getElementById("btnLogout");
 
-    btnLogin.addEventListener('click', e => {
+    btnLogin.addEventListener("click", e => {
         const email = txtEmail.value;
         const pass = txtPassword.value;
         const auth = firebase.auth();
@@ -93,7 +93,7 @@ function main() {
         promise.catch(e => console.log("Login error caught: " + e.message));
     });
 
-    btnSignUp.addEventListener('click', e => {
+    btnSignUp.addEventListener("click", e => {
         const email = txtEmail.value;
         const pass = txtPassword.value;
         const auth = firebase.auth();
@@ -101,7 +101,7 @@ function main() {
         promise.catch(e => console.log(e.message));
     });
 
-    btnLogout.addEventListener('click', e => {
+    btnLogout.addEventListener("click", e => {
         firebase.auth().signOut();
         resetData();
     });
@@ -125,8 +125,8 @@ function main() {
             if (user) {
                 currentUser = user;
                 // User is signed in.
-                loginSection.classList.add('hide');
-                logoutSection.classList.remove('hide');
+                loginSection.classList.add("hide");
+                logoutSection.classList.remove("hide");
                 userLabel.innerHTML = "Logged in as "+ (user.displayName ? user.displayName : user.email);
                 var displayName = user.displayName;
                 var email = user.email;
@@ -143,7 +143,7 @@ function main() {
                         // doc.data() is never undefined for query doc snapshots
                         console.log(doc.id, " => ", doc.data());
                         const chartData = doc.data();
-                        document.getElementById('chart-title').innerHTML = chartData.charts[0].title;
+                        document.getElementById("chart-title").innerHTML = chartData.charts[0].title;
 
                         if (chartData.charts[0].dataset && chartData.charts[0].dataset.datapoints) {
                             const receivedDatapoints = chartData.charts[0].dataset.datapoints;
@@ -157,13 +157,13 @@ function main() {
                 });
 
                 user.getIdToken().then(function(accessToken) {
-                    document.getElementById('main').style.display = "block";
+                    document.getElementById("main").style.display = "block";
                 });
             } else {
                 // User is signed out.
-                loginSection.classList.remove('hide');
-                logoutSection.classList.add('hide');
-                document.getElementById('main').style.display = "none";
+                loginSection.classList.remove("hide");
+                logoutSection.classList.add("hide");
+                document.getElementById("main").style.display = "none";
             }
         }, function(error) {
             console.log(error);
