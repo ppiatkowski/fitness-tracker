@@ -8,6 +8,7 @@ var flags = [new Flag("deload", new Date(2018, 7, 1), "rgba(255, 0, 0, 0.8)")];
 var targets = [new Target("next target", 70.0, "rgba(0, 150, 0, 0.8)"), new Target("ideal", 68.0, "rgba(0, 100, 0, 0.8)")];
 
 var currentUser = null;
+var chartSetupShown = false;
 
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
@@ -101,6 +102,16 @@ function main() {
     const txtLogin = document.getElementById("btnLogin");
     const txtSignUp = document.getElementById("btnSignUp");
     const txtLogout = document.getElementById("btnLogout");
+    const btnNewChart = document.getElementById("btnNewChart");
+
+    btnNewChart.addEventListener("click", e => {
+        if (chartSetupShown) {
+            $("#newChartSetup").slideUp(300, "swing");
+        } else {
+            $("#newChartSetup").slideDown(300, "swing");
+        }
+        chartSetupShown = !chartSetupShown;
+    });
 
     btnLogin.addEventListener("click", e => {
         const email = txtEmail.value;
