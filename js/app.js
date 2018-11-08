@@ -9,6 +9,7 @@ var targets = [new Target("next target", 70.0, "rgba(0, 150, 0, 0.8)"), new Targ
 
 var currentUser = null;
 var chartSetupShown = false;
+var darkMode = false;
 
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
@@ -76,17 +77,18 @@ function drawChart(dataset, flags, targets) {
 
 function setColorMode()
 {
-    // dark mode
-    document.documentElement.style.setProperty("--dominant-color", "black");
-    document.documentElement.style.setProperty("--main-accent-color", "rgba(77, 130, 229, 1.0)");
-    document.documentElement.style.setProperty("--secondary-accent-color", "rgba(77, 130, 229, 0.25)");
-    document.documentElement.style.setProperty("--contrast-accent-color", "black");
-
-    // light mode
-    document.documentElement.style.setProperty("--dominant-color", "white");
-    document.documentElement.style.setProperty("--main-accent-color", "rgba(77, 130, 229, 1.0)");
-    document.documentElement.style.setProperty("--secondary-accent-color", "rgba(77, 130, 229, 0.25)");
-    document.documentElement.style.setProperty("--contrast-accent-color", "white");
+    if (darkMode) {
+        document.documentElement.style.setProperty("--dominant-color", "black");
+        document.documentElement.style.setProperty("--main-accent-color", "rgba(77, 130, 229, 1.0)");
+        document.documentElement.style.setProperty("--secondary-accent-color", "rgba(77, 130, 229, 0.25)");
+        document.documentElement.style.setProperty("--contrast-accent-color", "black");
+    }
+    else {
+        document.documentElement.style.setProperty("--dominant-color", "white");
+        document.documentElement.style.setProperty("--main-accent-color", "rgba(77, 130, 229, 1.0)");
+        document.documentElement.style.setProperty("--secondary-accent-color", "rgba(77, 130, 229, 0.25)");
+        document.documentElement.style.setProperty("--contrast-accent-color", "white");
+    }
 }
 
 function main() {
@@ -103,6 +105,13 @@ function main() {
     const txtSignUp = document.getElementById("btnSignUp");
     const txtLogout = document.getElementById("btnLogout");
     const btnNewChart = document.getElementById("btnNewChart");
+    const btnChangeTheme = document.getElementById("btnChangeTheme");
+
+    btnChangeTheme.addEventListener("click", e => {
+        darkMode = !darkMode;
+        btnChangeTheme.innerText = darkMode ? "Light Mode" : "Dark Mode";
+        setColorMode();
+    });
 
     btnNewChart.addEventListener("click", e => {
         if (chartSetupShown) {

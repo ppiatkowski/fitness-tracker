@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
 </head>
-<body>
+<body class="body-container">
     <!-- TODO loading indicator during login -->
     <header class="navbar">
         <div id="loginSection">
@@ -18,7 +18,8 @@
             <button id="btnLogin" class="button btn-action">Log in</button>
             <button id="btnSignUp" class="button btn-secondary">Sign Up</button>
         </div>
-        <div id="logoutSection" class="hide">
+        <div id="logoutSection" class="menuBar hide">
+            <button id="btnChangeTheme" class="button">Dark mode</button>
             <span id="user">Logged in as</span>
             <button id="btnLogout" class="button btn-action">Log out</button>
         </div>

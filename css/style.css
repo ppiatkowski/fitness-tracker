@@ -5,11 +5,15 @@
     --contrast-accent-color: black;
 }
 
-body {
-    font-family: 'Roboto'; font-size: 18px;
+.body-container {
     margin: 0;
+    
+    transition-duration: .3s;
+    transition-property: *;
+
+    font-family: 'Roboto'; font-size: 18px;
     background-color: var(--dominant-color);
-}
+  }
 
 .mainContainer {
     max-width: 70%;
@@ -34,8 +38,7 @@ body {
 .center {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin: auto;
+    /* justify-content: center; */
 }
 
 #chart {
@@ -48,6 +51,7 @@ body {
 }
 
 .button {
+    margin: auto;
     border: 1px solid var(--main-accent-color);
     border-radius: 3px;
     padding: 8px 30px;
