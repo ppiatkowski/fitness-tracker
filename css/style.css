@@ -54,7 +54,15 @@ input[type=email], input[type=password] {
     transition-property: *;
 
     font-family: 'Roboto'; font-size: 18px;
-  }
+}
+
+.chart {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--main-accent-color);
+    border-radius: 7px;
+    margin-top: 5pt;
+    padding: 5pt;
+}
 
 .newChartSetup {
     margin: auto;
