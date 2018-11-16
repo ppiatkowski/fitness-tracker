@@ -5,22 +5,56 @@
     --contrast-accent-color: black;
 }
 
-.body-container {
-    margin: 0;
+html { 
+    background: url("../img/blue-gradient-wallpaper.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+/* Full-width input fields */
+input[type=email], input[type=password] {
+    padding: 12px 20px;
+    margin: 16px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.loginArea {
+    background-color: white;
+    position: fixed;
+    width: 400px;
+    top: calc(50% - 150px);
+    left: calc(50% - 200px); 
+    border-radius: 7px;
+    border: 1px solid var(--main-accent-color);
+}
+
+.loginAreaButtons {
+    display: flex;
+}
+  
+.equalWidth {
+    flex-basis: 100%;
+}
+
+.mainContainer {
+    max-width: 60%;
+    min-width: 30em;
+    margin: auto;
     
     transition-duration: .3s;
     transition-property: *;
 
     font-family: 'Roboto'; font-size: 18px;
-    background-color: var(--dominant-color);
   }
-
-.mainContainer {
-    max-width: 70%;
-    min-width: 30em;
-    margin: auto;
-    background-color: var(--dominant-color);
-}
 
 .newChartSetup {
     margin: auto;
@@ -33,12 +67,6 @@
 
 #btnNewChart {
     margin: auto;
-}
-
-.center {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
 }
 
 #chart {
@@ -62,7 +90,41 @@
     font-weight: bold;
 }
 
+.loginButton {
+    margin: auto;
+    border: 1px solid var(--main-accent-color);
+    border-radius: 3px;
+    padding: 8px 30px;
+    margin: 16px;
+    background-color: var(--main-accent-color);
+    display: inline-block;
+    color: var(--contrast-accent-color);
+    font-weight: bold;
+}
+
+.navbarButton {
+    margin: auto;
+    border: 0px solid rgba(255, 255, 255, 0.8);
+    padding: 8px 30px;
+    margin: 3px;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 0, 0, 0);
+    display: inline-block;
+    
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+.navbarButton:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
 .button:hover {
+    background-color: var(--contrast-accent-color);
+    color: var(--main-accent-color);
+}
+
+.loginButton:hover {
     background-color: var(--contrast-accent-color);
     color: var(--main-accent-color);
 }
@@ -72,16 +134,18 @@
     color: var(--contrast-accent-color);
 }
 
+.bordered {
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+}
+
 .navbar {
     padding: 5pt;
     margin: 0pt 0pt 15pt 0pt;
-    border-width: 0pt 0pt 1pt 0pt;
-    border-style: solid;
-    border-color: var(--main-accent-color);
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    background-color: var(--secondary-accent-color);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .hide {

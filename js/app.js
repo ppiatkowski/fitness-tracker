@@ -96,20 +96,18 @@ function main() {
     
     document.getElementById("main").style.display = "none";
 
-    const loginSection = document.getElementById("loginSection");
-    const userLabel = document.getElementById("user");
-    const logoutSection = document.getElementById("logoutSection");
+    const loginDialog = document.getElementById("login-dialog");
     const txtEmail = document.getElementById("txtEmail");
     const txtPassword = document.getElementById("txtPassword");
-    const txtLogin = document.getElementById("btnLogin");
-    const txtSignUp = document.getElementById("btnSignUp");
-    const txtLogout = document.getElementById("btnLogout");
+    const btnLogin = document.getElementById("btnLogin");
+    const btnSignUp = document.getElementById("btnSignUp");
+    const btnLogout = document.getElementById("btnLogout");
     const btnNewChart = document.getElementById("btnNewChart");
     const btnChangeTheme = document.getElementById("btnChangeTheme");
 
     btnChangeTheme.addEventListener("click", e => {
         darkMode = !darkMode;
-        btnChangeTheme.innerText = darkMode ? "Light Mode" : "Dark Mode";
+        btnChangeTheme.innerText = darkMode ? "LIGHT THEME" : "DARK THEME";
         setColorMode();
     });
 
@@ -160,11 +158,9 @@ function main() {
         firebase.auth().onAuthStateChanged(user => {
             console.log("AuthStateChanged user: "+ user)
             if (user) {
+                loginDialog.classList.add("hide");
                 currentUser = user;
                 // User is signed in.
-                loginSection.classList.add("hide");
-                logoutSection.classList.remove("hide");
-                userLabel.innerHTML = "Logged in as "+ (user.displayName ? user.displayName : user.email);
                 var displayName = user.displayName;
                 var email = user.email;
                 var emailVerified = user.emailVerified;
@@ -198,9 +194,10 @@ function main() {
                 });
             } else {
                 // User is signed out.
-                loginSection.classList.remove("hide");
-                logoutSection.classList.add("hide");
                 document.getElementById("main").style.display = "none";
+                loginDialog.classList.remove("hide");
+                // TODO reset password field on logout
+                // TODO handle login dialog errors
             }
         }, function(error) {
             console.log(error);

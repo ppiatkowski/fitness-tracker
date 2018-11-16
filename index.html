@@ -11,22 +11,21 @@
 </head>
 <body class="body-container">
     <!-- TODO loading indicator during login -->
-    <header class="navbar">
-        <div id="loginSection">
-            <input id="txtEmail" type="email" placeholder="e-mail">
-            <input id="txtPassword" type="password" placeholder="password">
-            <button id="btnLogin" class="button btn-action">Log in</button>
-            <button id="btnSignUp" class="button btn-secondary">Sign Up</button>
+    <div id="login-dialog" class="loginArea vertical">
+        <input id="txtEmail" type="email" placeholder="e-mail">
+        <input id="txtPassword" type="password" placeholder="password">
+        <div class="loginAreaButtons">
+            <button id="btnLogin" class="loginButton equalWidth">LOGIN</button>
+            <button id="btnSignUp" class="loginButton equalWidth">SIGN UP</button>
         </div>
-        <div id="logoutSection" class="menuBar hide">
-            <button id="btnChangeTheme" class="button">Dark mode</button>
-            <span id="user">Logged in as</span>
-            <button id="btnLogout" class="button btn-action">Log out</button>
-        </div>
-    </header>
+    </div>
 
-    <div id="main" class="hide">
-        <div class="center">
+    <div id="main" class="mainContainer hide">
+        <header class="navbar">
+            <button id="btnChangeTheme" class="navbarButton">DARK THEME</button>
+            <button id="btnLogout" class="navbarButton bordered">LOGOUT</button>
+        </header>
+        <div>
             <button id="btnNewChart" class="button">New Chart</button>
             <div id="newChartSetup" class="newChartSetup center hide">
                 <label>name</label>
@@ -37,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="mainContainer">
+        <div class="">
             <div id="chart-title">Chart title</div>
             <div id="chart">
                 <canvas id="myChart" width="200" height="150"></canvas>
